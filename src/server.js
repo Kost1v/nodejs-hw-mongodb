@@ -39,7 +39,7 @@ const setupServer = () => {
 
     if (!data) {
       return res.status(404).json({
-        staus: "404",
+        staus: 404,
         message: 'Contact not found',
       });
     }
