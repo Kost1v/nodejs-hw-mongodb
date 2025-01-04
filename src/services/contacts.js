@@ -6,13 +6,12 @@ export const getContactsById = (id) => ContactsCollection.findById(id);
 
 export const addContact = data => ContactsCollection.create(data);
 
-export const deleteContact = (filter) => ContactsCollection.findOneAndDelete(filter);
-
 export const updateContact = async (_id, payload, options = {}) => {
   const { upsert = false } = options;
   const result = await ContactsCollection.findOneAndUpdate({ _id }, payload, {
     new: true,
     upsert,
+    runValidators: true,
     includeResultMetadata: true,
   });
 
@@ -25,3 +24,5 @@ export const updateContact = async (_id, payload, options = {}) => {
     data: result.value,
   }
 }
+
+export const deleteContact = (filter) => ContactsCollection.findOneAndDelete(filter);

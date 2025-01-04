@@ -1,5 +1,11 @@
 import createHttpError from 'http-errors';
-import { addContact, deleteContact, getContacts, getContactsById, updateContact } from '../services/contacts.js';
+import {
+  addContact,
+  deleteContact,
+  getContacts,
+  getContactsById,
+  updateContact,
+} from '../services/contacts.js';
 
 export const getContactsController = async (req, res) => {
   const data = await getContacts();
@@ -33,14 +39,16 @@ export const addContactController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: "Successfully created a contact!",
+    message: 'Successfully created a contact!',
     data,
   });
-}
-export const upsertContactController = async (req, res) => {
+};
 
+export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
-  const {data, isNew} = await updateContact(contactId, req.body, {upsert: true});
+  const { data, isNew } = await updateContact(contactId, req.body, {
+    upsert: true,
+  });
 
   const status = isNew ? 201 : 200;
 
@@ -49,10 +57,9 @@ export const upsertContactController = async (req, res) => {
     message: 'Successfully update a contact!',
     data,
   });
-}
+};
 
 export const patchContactController = async (req, res) => {
-
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
 
@@ -65,7 +72,7 @@ export const patchContactController = async (req, res) => {
     message: 'Successfully update a contact!',
     data: result.data,
   });
-}
+};
 
 export const deleteContactsController = async (req, res) => {
   const { contactId } = req.params;
@@ -76,8 +83,5 @@ export const deleteContactsController = async (req, res) => {
     throw createHttpError(404, `Contact with id=${contactId} not found`);
   }
 
-  res.status(204).send()
+  res.status(204).send();
 };
-
-
-
