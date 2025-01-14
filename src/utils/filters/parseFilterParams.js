@@ -8,7 +8,6 @@ const parseContactType = ( contactType ) => {
   return parsedType;
 };
 
-
 const parseFavourite = ( isFavourite ) => {
 
   if (typeof isFavourite !== 'string') return;
