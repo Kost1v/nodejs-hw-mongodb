@@ -8,9 +8,12 @@ import {
   updateContact,
 } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { parseSortParams } from '../utils/parseSortParams.js';
-import { sortByList } from '../db/models/Contacts.js';
 import { parseFilterParams } from '../utils/filters/parseFilterParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { sortByList } from '../db/models/Contacts.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -51,9 +54,19 @@ export const getContactsByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
+  const cloudinaryEnable = getEnvVar('CLOUDINARY_ENABLE') === 'true';
+  let photo;
+  if (req.file) {
+    if (cloudinaryEnable) {
+      photo = await saveFileToCloudinary(req.file);
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
+
   const { _id: userId } = req.user;
 
-  const data = await addContact({ ...req.body, userId });
+  const data = await addContact({ ...req.body, photo, userId });
 
   res.status(201).json({
     status: 201,
@@ -79,9 +92,19 @@ export const upsertContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res) => {
+  const cloudinaryEnable = getEnvVar('CLOUDINARY_ENABLE') === 'true';
+  let photo;
+  if (req.file) {
+    if (cloudinaryEnable) {
+      photo = await saveFileToCloudinary(req.file);
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
+
   const { _id: userId } = req.user;
   const { contactId: _id } = req.params;
-  const result = await updateContact({ _id, userId }, req.body);
+  const result = await updateContact({ _id, userId }, { ...req.body, photo });
 
   if (!result) {
     throw createHttpError(404, `Contact with id=${_id} not found`);

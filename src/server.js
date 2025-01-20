@@ -15,6 +15,7 @@ const setupServer = () => {
   const app = express();
   app.use(cors());
   app.use(express.json());
+  app.use(express.static('uplaods'))
   app.use(cookieParser());
   // app.use(logger);
 
