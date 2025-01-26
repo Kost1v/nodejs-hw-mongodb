@@ -12,7 +12,7 @@ tags:
     description: Operations about contacts.
 servers:
   - url: http://localhost:3000
-  - url: https://my-contacts.com/api/v1 #посилання на задеплоєний сайт
+  - url: https://swagger-c91u.onrender.com #посилання на задеплоєний сайт
 paths:
   /contacts:
     get:
